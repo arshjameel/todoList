@@ -23,7 +23,7 @@ by priority levels and due dates set by the user.
 To start a dev server on your local machine
 ```
 git clone git@github.com:arshjameel/todoList.git
-cd todoList.git
+cd todoList
 npm install
 npm run dev
 ```
