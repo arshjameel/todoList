@@ -18,3 +18,12 @@ by priority levels and due dates set by the user.
 ["Gruvbox"](https://github.com/morhetz/gruvbox?tab=readme-ov-file) colorscheme
 2. The UI design was inspired by the [Neobrutalist](https://www.neobrutalism.dev/docs) 
    philosophy
+
+### Installation and Setup
+To start a dev server on your local machine
+```
+git@github.com:arshjameel/todoList.git
+cd todoList.git
+npm install
+npm run dev
+```
