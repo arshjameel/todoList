@@ -1,37 +1,20 @@
-# js-webpack-template
-A template repository for quick webpack config setup
+# Todo List
+A classic todo app. Users are able to create lists and then add various tasks 
+in those lists. The lists show date/time of creation. The tasks are organized 
+by priority levels and due dates set by the user.
 
-## Setup Instructions
+### Features
+- Dynamic loading of popup windows that ask the user for information
+- Modular layout javascript pages to acheieve low coupling 
+- Webpack bundling
 
-Clone and cd into the template repo, then install all dependencies:
-```bash
-git clone git@github.com:arshjameel/js-webpack-template.git
-cd js-webpack-template
-npm install
-```
+### Teck stack
+- Vanilla JavaScript
+- Webpack 5
+- [date-fns](https://date-fns.org/) for date manipulation
 
-Start development server:
-```bash
-npm run dev
-```
-
-Access the dev environment at: [http://localhost:8080](http://localhost:8080)
-
-## Deployment Instructions
-
-Push changes to remote repository's main branch:
-```bash
-git add .
-git commit -m "Your changes"
-git push origin main
-```
-
-Create a separate branch to deploy built files (first time only):
-```bash
-git branch gh-pages
-```
-
-Deploy changes:
-```bash
-npm run deploy
-```
+### Note 
+1. The color palette used for this program was loosely inspired by the 
+["Gruvbox"](https://github.com/morhetz/gruvbox?tab=readme-ov-file) colorscheme
+2. The UI design was inspired by the [Neobrutalist](https://www.neobrutalism.dev/docs) 
+   philosophy
