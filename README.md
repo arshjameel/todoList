@@ -16,7 +16,7 @@ by priority levels and due dates set by the user.
 ### Note 
 1. The color palette used for this program was loosely inspired by the 
 ["Gruvbox"](https://github.com/morhetz/gruvbox?tab=readme-ov-file) colorscheme
-2. The UI design was inspired by the ["Neobrutalist"](https://www.neobrutalism.dev/docs) 
+2. The UI design was inspired by the ["Neobrutalist"](https://www.neobrutalism.dev/) 
    philosophy
 
 ### Installation and Setup
