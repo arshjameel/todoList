@@ -3,7 +3,7 @@ import { createTodo } from './todo.js';
 let todoList = []; // store lists in an array
 export { todoList };
 
-export const newList = (onTodoAdded) => {
+export const newList = (onTodoAdded, onDelete, existingData = null) => {
     const mainDiv = document.createElement('div');
     mainDiv.className = 'popup-div';
     const windowDiv = document.createElement('div');
@@ -12,6 +12,10 @@ export const newList = (onTodoAdded) => {
     // header
     const header = document.createElement('div');
     header.className = 'list-window-header';
+    const headerText = document.createElement('h1');
+    headerText.textContent = 'Create List';
+    const closeButtonContainer = document.createElement('div');
+    closeButtonContainer.className = 'close-btn-container';
     const crossButton = document.createElement('button');
     crossButton.className = 'close-btn';
     crossButton.textContent = '✕';
@@ -19,7 +23,9 @@ export const newList = (onTodoAdded) => {
     crossButton.addEventListener('click', () => {
         mainDiv.remove();
     });
-    header.appendChild(crossButton);
+    closeButtonContainer.appendChild(crossButton);
+    header.appendChild(headerText);
+    header.appendChild(closeButtonContainer);
 
     // form
     const form = document.createElement('form');
@@ -29,34 +35,32 @@ export const newList = (onTodoAdded) => {
         <input type="text" name="title" required>
     </label>
     <label>
-        Description: <textarea name="description" rows="3"></textarea>
-    </label>
-    <label>
-        Due Date: <input type="date" name="dueDate" required>
-    </label>
-    <label>Priority:
-        <select name="priority">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
+        Description: <textarea name="description" rows="5"></textarea>
     </label>
     `;
     
+    if (existingData) {
+        form.querySelector('input[name="title"]').value = existingData.title;
+        form.querySelector('textarea[name="description"]').value = existingData.description;
+    }
+
     // form submission
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-
         const formData = new FormData(form);
-        const todo = createTodo(
-            formData.get('title'),
-            formData.get('description'),
-            formData.get('dueDate'),
-            formData.get('priority')
-        );
-        todoList.push(todo);
-        onTodoAdded(todo);
-        console.log('Todo added:', todo); // Replace with UI update later
+
+        if (existingData) {
+            existingData.title = formData.get('title');
+            existingData.description = formData.get('description');
+            onTodoAdded(existingData);
+        } else {
+            const todo = new createTodo(
+                formData.get('title'), 
+                formData.get('description')
+            );
+            todoList.push(todo);
+            onTodoAdded(todo);
+        }
         mainDiv.remove();
     }); 
     
@@ -69,20 +73,22 @@ export const newList = (onTodoAdded) => {
     submitButton.className = 'submit-button';
     submitButton.textContent = 'Submit';
     footer.appendChild(submitButton);
-    // cancel button
-    const cancelButton = document.createElement('button');
-    cancelButton.type = 'button';
-    cancelButton.className = 'cancel-button';
-    cancelButton.textContent = 'Cancel';
-    cancelButton.addEventListener('click', () => {
+    // delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'delete-button';
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+        if (onDelete) onDelete(existingData);  // Call delete callback
         mainDiv.remove();
     });
-    footer.appendChild(cancelButton);
+    footer.appendChild(deleteButton);
+    form.appendChild(footer);
+    
     
     // final appending
     windowDiv.appendChild(header);
     windowDiv.appendChild(form);
-    form.appendChild(footer);
     mainDiv.appendChild(windowDiv);
     
     return mainDiv;
