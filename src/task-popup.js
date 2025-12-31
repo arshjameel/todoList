@@ -1,8 +1,3 @@
-import { createTodo } from './todo.js';
-
-let todoList = [];
-export { todoList };
-
 export const newTask = (onTodoAdded, onDelete, existingData = null) => {
     const mainDiv = document.createElement('div');
     mainDiv.className = 'popup-div';
@@ -52,37 +47,28 @@ export const newTask = (onTodoAdded, onDelete, existingData = null) => {
     if (existingData) {
         form.querySelector('input[name="title"]').value = existingData.title;
         form.querySelector('textarea[name="description"]').value = existingData.description;
-        
-        const date = new Date(existingData.dueDate);
-        const dateVal = existingData.dueDate ? date.toISOString().slice(0, 16) : '';
-        form.querySelector('input[name="dueDate"]').value = dateVal;
-
+        if (existingData.dueDate) {
+            const date = new Date(existingData.dueDate);
+            const offset = date.getTimezoneOffset() * 60 * 1000; // offset in milliseconds
+            const localValue = new Date(date - offset).toISOString().slice(0, 16);
+            form.querySelector('input[name="dueDate"]').value = localValue;
+        }
         form.querySelector('select[name="priority"]').value = existingData.priority || 'low';
-        //submitButton.textContent = 'Update';
     }
     
     // form submission
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-
-        if (existingData) {
-            existingData.title = formData.get('title');
-            existingData.description = formData.get('description');
-            existingData.dueDate = formData.get('dueDate');
-            existingData.priority = formData.get('priority');
-            onTodoAdded(existingData);
-        } else {
-            const todo = new createTodo(
-                formData.get('title'), 
-                formData.get('description'),
-                formData.get('dueDate'),
-                formData.get('priority')
-            );
-            todoList.push(todo);
-            onTodoAdded(todo);
-        }
-        mainDiv.remove()
+        const data = {
+            title: formData.get('title'),
+            description: formData.get('description'),
+            dueDate: formData.get('dueDate'),
+            priority: formData.get('priority')
+        };
+        if (onTodoAdded) onTodoAdded(data);
+        mainDiv.remove();
+        
     }); 
     
     // footer
@@ -92,15 +78,16 @@ export const newTask = (onTodoAdded, onDelete, existingData = null) => {
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.className = 'submit-button';
-    submitButton.textContent = 'Submit';
+    submitButton.textContent = existingData ? 'Update' : 'Submit';
     footer.appendChild(submitButton);
     // delete button
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.className = 'delete-button';
     deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => {
-        if (onDelete) onDelete(existingData);  // Call delete callback
+    deleteButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (onDelete) onDelete();
         mainDiv.remove();
     });
     footer.appendChild(deleteButton);

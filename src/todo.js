@@ -5,7 +5,7 @@ export class createTodo {
         this.description = description,
         this.dueDate = dueDate,
         this.priority = priority,
-        this.createdAt = new Date().toISOString(),  // creation timestamp
+        this.createdAt = new Date().toISOString(),
         this.completed = false,
         this.subtasks = []
     }

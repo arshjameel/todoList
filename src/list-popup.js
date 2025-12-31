@@ -1,8 +1,3 @@
-import { createTodo } from './todo.js';
-
-let todoList = []; // store lists in an array
-export { todoList };
-
 export const newList = (onTodoAdded, onDelete, existingData = null) => {
     const mainDiv = document.createElement('div');
     mainDiv.className = 'popup-div';
@@ -48,19 +43,11 @@ export const newList = (onTodoAdded, onDelete, existingData = null) => {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-
-        if (existingData) {
-            existingData.title = formData.get('title');
-            existingData.description = formData.get('description');
-            onTodoAdded(existingData);
-        } else {
-            const todo = new createTodo(
-                formData.get('title'), 
-                formData.get('description')
-            );
-            todoList.push(todo);
-            onTodoAdded(todo);
-        }
+        const data = {
+            title: formData.get('title'),
+            description: formData.get('description')
+        };
+        if (onTodoAdded) onTodoAdded(data);
         mainDiv.remove();
     }); 
     
@@ -71,20 +58,20 @@ export const newList = (onTodoAdded, onDelete, existingData = null) => {
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.className = 'submit-button';
-    submitButton.textContent = 'Submit';
+    submitButton.textContent = existingData ? 'Update' : 'Submit';
     footer.appendChild(submitButton);
     // delete button
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.className = 'delete-button';
     deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => {
-        if (onDelete) onDelete(existingData);  // Call delete callback
+    deleteButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (onDelete) onDelete(existingData); 
         mainDiv.remove();
     });
     footer.appendChild(deleteButton);
     form.appendChild(footer);
-    
     
     // final appending
     windowDiv.appendChild(header);

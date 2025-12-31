@@ -254,7 +254,7 @@ body > div > div {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: start;
+    align-items: center;
 }
 
 .todo-content, .task-content {

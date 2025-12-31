@@ -1,6 +1,4 @@
 import { format } from "date-fns";
-import { newList } from "./list-popup.js";
-import { newTask } from "./task-popup.js";
 
 const timeUntilDue = (dueDate) => {
     const now = new Date();
@@ -22,7 +20,7 @@ const timeUntilDue = (dueDate) => {
     if (minutes > 0 || (hours === 0 && days === 0)) {  // Fallback for minutes
         parts.push(minutes === 1 ? `${minutes}min` : `${minutes}mins`);
     }
-    
+
     return `⧗ ${parts.join(', ')} left`
 };
 
@@ -51,7 +49,6 @@ export const displayTask = (task, taskContainer) => {
             <button class="edit-task">Edit</button>
         </div>
     `;
-        
     taskItem.appendChild(contentArea);
         
     const descriptionArea = document.createElement('div');
@@ -59,19 +56,9 @@ export const displayTask = (task, taskContainer) => {
     descriptionArea.innerHTML = `      
         <p>${task.description || ''}</p>
     `;
+
     taskItem.appendChild(descriptionArea);
-    
     taskItem.appendChild(footer);
-    
-    footer.querySelector('.edit-task').addEventListener('click', () => {
-        const taskPopup = newTask(
-            (updatedTask) => editTask(updatedTask, contentArea, descriptionArea),
-            () => taskItem.remove(),
-            task
-        )
-        content.appendChild(taskPopup)
-    })
-    
     taskContainer.appendChild(taskItem);
 };
 
@@ -83,7 +70,6 @@ export const displayTodo = (todo, container) => {
     contentArea.className = 'todo-content';
 
     let timestamp = format(new Date(todo.createdAt), "MM-dd-yyyy hh:mm a");
-    
     contentArea.innerHTML = `
         <h3>${todo.title}</h3>
         <p>⏱ ${timestamp}</p>
@@ -100,53 +86,38 @@ export const displayTodo = (todo, container) => {
             <button class="edit-todo">Edit</button>          
         </div>
     `;
-    
     todoItem.appendChild(contentArea);
     
     const taskDisplay = document.createElement('div');
     taskDisplay.className = 'todo-display';
     todoItem.appendChild(taskDisplay);
-    
     todoItem.appendChild(footer);     
-    
-    footer.querySelector('.add-task').addEventListener('click', () => {
-        const taskPopup = newTask((newTaskItem) => {
-            displayTask(newTaskItem, taskDisplay);
-        });
-        content.appendChild(taskPopup);
-    });
-    
-    footer.querySelector('.edit-todo').addEventListener('click', () => {
-        const taskPopup = newList(
-            (updatedTodo) => editList(updatedTodo, todoItem),
-            () => todoItem.remove(),
-            todo
-        )
-        content.appendChild(taskPopup);
-    });
-  
     container.appendChild(todoItem);
     return taskDisplay
 };
 
 export const editList = (todo, todoItem) => {
     const contentArea = todoItem.querySelector('.todo-content');
+    const dateToFormat = todo.createdAt ? new Date(todo.createdAt) : new Date();
+    let timestamp;
+    try {
+        timestamp = format(dateToFormat, "MM-dd-yyyy hh:mm a");
+    } catch (error) {
+        timestamp = "Invalid Date";
+    }
     contentArea.innerHTML = `
         <h3>${todo.title}</h3>
-        <p>⏱ ${format(new Date(todo.createdAt), "MM-dd-yyyy hh:mm a")}</p>
+        <p>⏱ ${timestamp}</p>
         <p>${todo.description || 'No description'}</p>
     `;
 };
 
 export const editTask = (task, contentArea, descriptionArea) => {
-
     let due = format(new Date(task.dueDate), "MM-dd-yyyy hh:mm a");
-
     contentArea.innerHTML = `
         <h4>${task.title}</h4>
         <p>⏱ ${due}</p>
         <p>${timeUntilDue(task.dueDate)}</p>
     `;
-            
     descriptionArea.innerHTML = `<p>${task.description || 'No description'}</p>`;
 };
