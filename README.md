@@ -9,7 +9,7 @@ by priority levels and due dates set by the user.
 - Dynamic UI using real time DOM manipulation to load popup windows and update information.
 - Modular architecture to acheieve low coupling via separation of concerns.
 
-### Teck stack
+### Tech stack
 - Vanilla JavaScript (ESM)
 - Webpack 5 for asset bundling and dev environment
 - [date-fns](https://date-fns.org/) for date fetching/manipulation
